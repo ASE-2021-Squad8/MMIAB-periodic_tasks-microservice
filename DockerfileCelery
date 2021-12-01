@@ -1,0 +1,10 @@
+FROM python:3.9
+LABEL maintainer="<8>_squad"
+LABEL version="1.0"
+LABEL description="Message in a Bottle Period task Microservice"
+WORKDIR /
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt  
+RUN rm requirements.txt  
+
+COPY . /
