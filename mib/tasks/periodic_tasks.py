@@ -1,11 +1,11 @@
 import json
 import random
+import celery
 import requests
 from requests.api import request
-from celery import Celery
 from celery.utils.log import get_logger
 
-logger = get_logger()
+logger = get_logger(__name__)
 
 _APP = None
 
@@ -14,7 +14,7 @@ USER_MS = "http://user:5000/api/"
 SEND_NOTIFICATION_MS = "http://notification:5000/api/"
 
 
-@celery.task
+@celery.shared_task
 def check_messages(test_mode):
     """Check that messages have been sent correctly
 
@@ -57,20 +57,15 @@ def check_messages(test_mode):
                         reply_r = requests.get(USER_MS + f"user/{recipient}/email")
                         reply_s = requests.get(USER_MS + f"user/{sender}/email")
                         if reply_r.status_code == 200:
-                            email_r = reply_r.json()["mail"]
+                            email_r = reply_r.json()["email"]
                             email_s = (
-                                reply_s.json()["mail"]
+                                reply_s.json()["email"]
                                 if reply_s.status_code == 200
                                 else "mib@mibmail.it"
                             )
                             # send notification via email microservice
-                            request.put(
-                                SEND_NOTIFICATION_MS + "email",
-                                json={
-                                    "sender": email_s,
-                                    "recipient": email_r,
-                                    "body": "You have just received a message!",
-                                },
+                            _send_email(
+                                email_s, email_r, "You have just received a message!"
                             )
             result = True
         except Exception as e:
@@ -82,7 +77,7 @@ def check_messages(test_mode):
     return couple
 
 
-@celery.task
+@celery.shared_task
 def lottery(test_mode):
     """implement lottery game
     :param test_mode : determine the operating mode
@@ -110,20 +105,22 @@ def lottery(test_mode):
             # extract the winner randomly
             winner = random.randint(0, len(participants) - 1)
             email_r = participants[winner]["email"]
-            sender = "Message in a bottle"
-            user_id = participants[winner]["email"]["id"]
+            sender = "mib@mibmail.it"
+            id_winner = participants[winner]["id"]
             # add points
             reply = requests.put(
-                USER_MS + f"/user/points/{user_id}", json={"points": 60}
+                USER_MS + f"user/points/{id_winner}", json={"points": 60}
             )
-            _send_email("mib@mibmail.it", email_r, "You have just won 60 point!")
+            _send_email(sender, email_r, "You have just won 60 point!")
+            result = True
+
     logger.info("Lottery game end winner id: " + str(id_winner))
     return (result, id_winner)
 
 
 def _send_email(email_s, email_r, body):
     # send notification via email microservice
-    request.put(
+    requests.put(
         SEND_NOTIFICATION_MS + "email",
         json={
             "sender": email_s,

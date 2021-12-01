@@ -13,6 +13,7 @@ import logging
 from celery import Celery
 from celery.schedules import crontab  # cronetab for lottery
 from datetime import timedelta
+from flask import Flask
 
 db = None
 migrate = None
@@ -36,14 +37,8 @@ def create_app():
     # first initialize the logger
     init_logger()
 
-    api_app = connexion.FlaskApp(
-        __name__,
-        server="flask",
-        specification_dir="openapi/",
-    )
-
     # getting the flask app
-    app = api_app.app
+    app = Flask(__name__)
 
     flask_env = os.getenv("FLASK_ENV", "None")
     if flask_env == "development":
@@ -61,23 +56,6 @@ def create_app():
     # Load config
     env = Environments(app)
     env.from_object(config_object)
-
-    # registering db
-    db = SQLAlchemy(app=app)
-
-    # requiring the list of models
-    import mib.models
-
-    # creating migrate
-    migrate = Migrate(app=app, db=db)
-
-    # checking the environment
-    if flask_env == "testing":
-        # we need to populate the db
-        db.create_all()
-
-    # registering to api app all specifications
-    register_specifications(api_app)
 
     return app
 

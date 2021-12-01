@@ -6,12 +6,12 @@ version: "3.6"
 services:
   redis:
     image: "redis:alpine"
-    ports:
+    ports:  
       - "6379:6379"
   worker:
     image: "worker:lasest"
     build:
-      context: . 
+      context: .
       dockerfile: DockerfileCelery
     command: [celery, -A, mib.background, worker, -l, INFO]
     depends_on:
@@ -20,9 +20,9 @@ services:
       - env_file
   scheduler:
     image: "scheduler:lesest"
-      build:
-        contentx: .
-        dockerfile: DockerfileCelery
+    build:
+      context: .
+      dockerfile: DockerfileCelery
     command: [celery, -A, mib.background, beat , -l, INFO]
     depends_on:
       - redis
@@ -36,7 +36,6 @@ services:
       build:
         context: .
         dockerfile: Dockerfile 
-
     ports:
      - "5000:5000"
     env_file:
