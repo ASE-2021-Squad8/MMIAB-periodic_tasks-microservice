@@ -1,7 +1,7 @@
 #
 # Docker file for Message in a Bottle v1.0
 #
-FROM python:3.9.5-alpine
+FROM python:3.9.5
 LABEL maintainer="<8>_squad"
 LABEL version="1.0"
 LABEL description="Message in a Bottle Periodic task Microservice"

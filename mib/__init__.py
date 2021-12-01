@@ -7,8 +7,6 @@ __version__ = "0.1"
 
 import connexion
 from flask_environments import Environments
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
 import logging
 from celery import Celery
 from celery.schedules import crontab  # cronetab for lottery
@@ -16,7 +14,6 @@ from datetime import timedelta
 from flask import Flask
 
 db = None
-migrate = None
 debug_toolbar = None
 redis_client = None
 app = None
@@ -31,7 +28,6 @@ def create_app():
     """
     global db
     global app
-    global migrate
     global api_app
 
     # first initialize the logger
