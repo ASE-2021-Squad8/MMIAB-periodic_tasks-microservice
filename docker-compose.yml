@@ -1,21 +1,9 @@
 #
 # Message in A bottle Docker Compose file
 #
-
 version: "3.6"
 
 services:
-  db:
-    image: postgres:13
-    restart: unless-stopped
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      # this is only for development purpose
-      - "5342:5342"
-    env_file:
-      - env_file
-
   redis:
     image: "redis:alpine"
     ports:
@@ -28,7 +16,6 @@ services:
     command: [celery, -A, mib.background, worker, -l, INFO]
     depends_on:
       - redis
-      - mib_messages
     env_file:
       - env_file
   scheduler:
@@ -39,14 +26,13 @@ services:
     command: [celery, -A, mib.background, beat , -l, INFO]
     depends_on:
       - redis
-      - mib_messages
     env_file:
       - env_file
 
-  mib_messages:
+  mib_periodic_task:
     <<: &mib_messages
       # Building the image
-      image: "mib-messages:latest"
+      image: "mib_periodic_task:latest"
       build:
         context: .
         dockerfile: Dockerfile 
@@ -55,9 +41,7 @@ services:
      - "5000:5000"
     env_file:
       - env_file
-    environment:
-      - POSTGRES_HOST=db
     depends_on:
-      - db
-      - migrations
       - redis
+      - scheduler
+      - worker
