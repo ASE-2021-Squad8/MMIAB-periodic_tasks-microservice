@@ -1,6 +1,6 @@
 import json
 import random
-import celery
+from celery import decorators
 import requests
 from requests.api import request
 from celery.utils.log import get_logger
@@ -14,7 +14,7 @@ USER_MS = "http://user:5000/api/"
 SEND_NOTIFICATION_MS = "http://notification:5000/api/"
 
 
-@celery.shared_task
+@decorators.task(name="mib.tasks.periodic_tasks.check_messages")
 def check_messages(test_mode):
     """Check that messages have been sent correctly
 
@@ -77,7 +77,7 @@ def check_messages(test_mode):
     return couple
 
 
-@celery.shared_task
+@decorators.task(name="mib.tasks.periodic_tasks.lottery")
 def lottery(test_mode):
     """implement lottery game
     :param test_mode : determine the operating mode
