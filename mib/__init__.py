@@ -8,6 +8,7 @@ __version__ = "0.1"
 import connexion
 from flask_environments import Environments
 import logging
+import mib.tasks.periodic_tasks
 from celery import Celery
 from celery.schedules import crontab  # cronetab for lottery
 from datetime import timedelta
@@ -80,13 +81,13 @@ def create_celery(flask_app):  # pragma: no cover
     celery.conf.beat_schedule = {
         # for coping with faults during message delivery
         "check_message": {
-            "task": "mib.tasks.periodic_task.check_messages",
-            "schedule": timedelta(minutes=15),  # every 15 minutes
+            "task": "mib.tasks.periodic_tasks.check_messages",
+            "schedule": timedelta(minutes=1),  # every 15 minutes
             "args": [False],  # test mode
         },
         # lottery game
         "lottery": {
-            "task": "mib.tasks.periodic_task.lottery",
+            "task": "mib.tasks.periodic_tasks.lottery",
             "schedule": crontab(0, 0, day_of_month="1"),  # every 1st
             "args": [False],  # test mode
         },
