@@ -9,7 +9,7 @@ services:
     ports:  
       - "6379:6379"
   worker:
-    image: "worker:lasest"
+    image: "worker:latest"
     build:
       context: .
       dockerfile: DockerfileCelery
@@ -19,7 +19,7 @@ services:
     env_file:
       - env_file
   scheduler:
-    image: "scheduler:lesest"
+    image: "scheduler:latest"
     build:
       context: .
       dockerfile: DockerfileCelery
