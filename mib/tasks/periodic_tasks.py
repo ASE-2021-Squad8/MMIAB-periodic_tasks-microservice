@@ -4,14 +4,15 @@ from celery import decorators
 import requests
 from requests.api import request
 from celery.utils.log import get_logger
+from mib import app
 
 logger = get_logger(__name__)
 
 _APP = None
 
-MESSAGE_MS = "http://message:5000/api/"
-USER_MS = "http://user:5000/api/"
-SEND_NOTIFICATION_MS = "http://notification:5000/api/"
+MESSAGE_MS = app.config["USERS_MS_URL"]
+USER_MS = app.config["MESSAGE_MS_URL"]
+SEND_NOTIFICATION_MS = app.config["NOTIFICATIONS_MS_URL"]
 
 
 @decorators.task(name="mib.tasks.periodic_tasks.check_messages")

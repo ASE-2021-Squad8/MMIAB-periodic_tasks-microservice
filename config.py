@@ -8,19 +8,19 @@ class Config(object):
     USERS_MS_PROTO = os.getenv('USERS_MS_PROTO', 'http')
     USERS_MS_HOST = os.getenv('USERS_MS_HOST', 'localhost')
     USERS_MS_PORT = os.getenv('USERS_MS_PORT', 10001)
-    USERS_MS_URL = '%s://%s:%s/api' % (USERS_MS_PROTO, USERS_MS_HOST, USERS_MS_PORT)
+    USERS_MS_URL = '%s://%s:%s/api/' % (USERS_MS_PROTO, USERS_MS_HOST, USERS_MS_PORT)
 
     # messages microservice
     MESSAGE_MS_PROTO=os.getenv('MESSAGE_MS_PROTO', 'http')
     MESSAGE_MS_HOST=os.getenv('MESSAGE_MS_HOST', 'localhost')
     MESSAGE_MS_PORT=os.getenv('MESSAGE_MS_PORT', 10002)
-    MESSAGE_MS_URL='%s://%s:%s/api' % (MESSAGE_MS_PROTO, MESSAGE_MS_HOST, MESSAGE_MS_PORT)
+    MESSAGE_MS_URL='%s://%s:%s/api/' % (MESSAGE_MS_PROTO, MESSAGE_MS_HOST, MESSAGE_MS_PORT)
 
     # notifications microservice
     NOTIFICATIONS_MS_PROTO = os.getenv('NOTIFICATIONS_MS_PROTO', 'http')
     NOTIFICATIONS_MS_HOST = os.getenv('NOTIFICATIONS_MS_HOST', 'localhost')
     NOTIFICATIONS_MS_PORT = os.getenv('NOTIFICATIONS_MS_PORT', 10003)
-    NOTIFICATIONS_MS_URL = '%s://%s:%s/api' % (NOTIFICATIONS_MS_PROTO, NOTIFICATIONS_MS_HOST, NOTIFICATIONS_MS_PORT)
+    NOTIFICATIONS_MS_URL = '%s://%s:%s/api/' % (NOTIFICATIONS_MS_PROTO, NOTIFICATIONS_MS_HOST, NOTIFICATIONS_MS_PORT)
 
 
 class DebugConfig(Config):
