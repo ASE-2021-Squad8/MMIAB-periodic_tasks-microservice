@@ -5,6 +5,7 @@ import requests
 from requests.api import request
 from celery.utils.log import get_logger
 from config import Config
+from circuitbreaker import circuit
 
 logger = get_logger(__name__)
 
@@ -17,6 +18,7 @@ SEND_NOTIFICATION_MS = config.NOTIFICATIONS_MS_URL
 
 
 @decorators.task(name="mib.tasks.periodic_tasks.check_messages")
+@circuit(expected_exception=requests.RequestException)
 def check_messages(test_mode):
     """Check that messages have been sent correctly
 
@@ -82,6 +84,7 @@ def check_messages(test_mode):
 
 
 @decorators.task(name="mib.tasks.periodic_tasks.lottery")
+@circuit(expected_exception=requests.RequestException)
 def lottery(test_mode):
     """implement lottery game
     :param test_mode : determine the operating mode
@@ -121,7 +124,7 @@ def lottery(test_mode):
     logger.info("Lottery game end winner id: " + str(id_winner))
     return (result, id_winner)
 
-
+@circuit(expected_exception=requests.RequestException)
 def _send_email(email_s, email_r, body):
     # send notification via email microservice
     requests.put(
