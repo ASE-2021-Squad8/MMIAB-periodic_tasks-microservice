@@ -88,7 +88,7 @@ def create_celery(flask_app):  # pragma: no cover
         # lottery game
         "lottery": {
             "task": "mib.tasks.periodic_tasks.lottery",
-            "schedule": crontab(minute=1),#(0, 0, day_of_month="1"),  # TODO: every 1st of month
+            "schedule": timedelta(minutes=1),#(0, 0, day_of_month="1"),  # TODO: every 1st of month
             "args": [False],  # test mode
         },
     }
