@@ -11,8 +11,8 @@ logger = get_logger(__name__)
 _APP = None
 
 config = Config()
-MESSAGE_MS = config.USERS_MS_URL
-USER_MS = config.MESSAGE_MS_URL
+USERS_URL = config.USERS_MS_URL
+MESSAGE_MS = config.MESSAGE_MS_URL
 SEND_NOTIFICATION_MS = config.NOTIFICATIONS_MS_URL
 
 
