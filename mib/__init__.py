@@ -82,13 +82,13 @@ def create_celery(flask_app):  # pragma: no cover
         # for coping with faults during message delivery
         "check_message": {
             "task": "mib.tasks.periodic_tasks.check_messages",
-            "schedule": timedelta(minutes=1),  # TODO: every 15 minutes
+            "schedule": timedelta(minutes=15),  # every 15 minutes
             "args": [False],  # test mode
         },
         # lottery game
         "lottery": {
             "task": "mib.tasks.periodic_tasks.lottery",
-            "schedule": timedelta(minutes=1),#(0, 0, day_of_month="1"),  # TODO: every 1st of month
+            "schedule": crontab(0, 0, day_of_month="1"),  # every 1st
             "args": [False],  # test mode
         },
     }
