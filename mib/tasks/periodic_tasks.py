@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 _APP = None
 
 config = Config()
-USERS_URL = config.USERS_MS_URL
+USER_MS = config.USERS_MS_URL
 MESSAGE_MS = config.MESSAGE_MS_URL
 SEND_NOTIFICATION_MS = config.NOTIFICATIONS_MS_URL
 
@@ -69,6 +69,8 @@ def check_messages(test_mode):
                             _send_email(
                                 email_s, email_r, "You have just received a message!"
                             )
+            else:
+                messages = []
             result = True
         except Exception as e:
             logger.exception("check_messages raises ", e)
